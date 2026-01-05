@@ -12,19 +12,16 @@ import java.math.BigDecimal;
 import java.util.Scanner;
 
 import static sorokin.dev.dto.CommandType.ACCOUNT_CREATE;
-import static sorokin.dev.dto.CommandType.USER_CREATE;
 
 @Component
 public class AccountCreateHandler implements CommandHandler {
 
     private final UserService userService;
     private final AccountService accountService;
-    private final AccountConfig accountConfig;
 
     public AccountCreateHandler(UserService userService, AccountService accountService, AccountConfig accountConfig) {
         this.userService = userService;
         this.accountService = accountService;
-        this.accountConfig = accountConfig;
     }
 
     @Override

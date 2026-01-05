@@ -3,8 +3,8 @@ package sorokin.dev.service;
 import org.springframework.stereotype.Service;
 import sorokin.dev.dto.Account;
 import sorokin.dev.repository.AccountRepository;
-
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Сервис для управления счетами.
@@ -26,10 +26,33 @@ public class AccountService {
     }
 
     /**
-     * Пополнение и снятие средств.
+     * Поиск счета по ID.
      */
-    public boolean changeAmount(Long id, BigDecimal summa) {
-        Account account = accountRepository.findById(id).orElse(null);
+    public Optional<Account> findAccountById(Long id) {
+        return accountRepository.findById(id);
+    }
+
+    /**
+     * Пополнение средств.
+     */
+    public boolean addAmount(Long id, BigDecimal amount) {
+        var account = accountRepository.findById(id);
+        if (account.isEmpty()) {
+            return false;
+        }
+        accountRepository.putDeposit(id, amount);
+        return true;
+    }
+
+    /**
+     * Cнятие средств.
+     */
+    public boolean withdraw(Long id, BigDecimal amount) {
+        var account = accountRepository.findById(id);
+        if (account.isEmpty()) {
+            return false;
+        }
+        accountRepository.putDeposit(id, amount);
         return true;
     }
 
