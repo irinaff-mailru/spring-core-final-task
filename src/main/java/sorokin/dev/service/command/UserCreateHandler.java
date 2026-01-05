@@ -27,8 +27,7 @@ public class UserCreateHandler implements CommandHandler {
 
     @Override
     public void handle(Scanner scanner) {
-        System.out.println("UserCreateHandler");
-        System.out.print("> Enter user login (5-20 symbols):");
+        System.out.print("Enter user login (5-20 symbols):");
         System.out.print("> ");
         String login = scanner.nextLine();
         if (!isLoginValid(login)) {
