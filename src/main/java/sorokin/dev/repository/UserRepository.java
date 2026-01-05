@@ -30,4 +30,10 @@ public class UserRepository {
     public Optional<User> findById(Long id) {
         return Optional.ofNullable(users.get(id));
     }
+
+    public Optional<User> findUserByLogin(String login) {
+        return users.values().stream()
+                .filter(u -> login.equals(u.getLogin()))
+                .findFirst();
+    }
 }
