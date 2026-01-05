@@ -28,8 +28,17 @@ public class User {
         this.login = login;
     }
 
-    public void addAccount() {
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", accounts=" + accounts +
+                '}';
+    }
 
+    public void addAccount(Account account) {
+        accounts.add(account);
     }
 
     public Long getId() {

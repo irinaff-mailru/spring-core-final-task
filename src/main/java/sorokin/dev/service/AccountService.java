@@ -1,5 +1,6 @@
 package sorokin.dev.service;
 
+import org.springframework.stereotype.Service;
 import sorokin.dev.dto.Account;
 import sorokin.dev.repository.AccountRepository;
 
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 /**
  * Сервис для управления счетами.
  */
+@Service
 public class AccountService {
 
     private final AccountRepository accountRepository;
@@ -19,8 +21,8 @@ public class AccountService {
     /**
      * Создание счета.
      */
-    public Account create(Long userId) {
-        return accountRepository.save(userId);
+    public Account create(Long userId, BigDecimal amount) {
+        return accountRepository.save(userId, amount);
     }
 
     /**

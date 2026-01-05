@@ -27,9 +27,19 @@ public class Account {
      */
     private boolean isClosed = false;
 
-    public Account(Long id, Long userId) {
+    public Account(Long id, Long userId, BigDecimal moneyAmount) {
         this.id = id;
         this.userId = userId;
+        this.moneyAmount = moneyAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", moneyAmount=" + moneyAmount +
+                '}';
     }
 
     public Long getId() {
