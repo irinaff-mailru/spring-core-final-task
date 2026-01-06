@@ -35,11 +35,13 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", moneyAmount=" + moneyAmount +
-                '}';
+        if (!this.isClosed) {
+            return "Account{" +
+                    "id=" + id +
+                    ", userId=" + userId +
+                    ", moneyAmount=" + moneyAmount +
+                    '}';
+        } else return "";
     }
 
     public Long getId() {

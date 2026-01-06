@@ -2,11 +2,8 @@ package sorokin.dev.repository;
 
 import org.springframework.stereotype.Repository;
 import sorokin.dev.dto.Account;
-import sorokin.dev.dto.User;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,16 +22,17 @@ public class AccountRepository {
         return newAccount;
     }
 
-    public List<Account> findAllByUserId(Long userId) {
-        return accounts.values().stream()
-                .filter(a -> userId.equals(a.getUserId())).toList();
-    }
-
     public Optional<Account> findById(Long id) {
         return Optional.ofNullable(accounts.get(id));
     }
 
-    public boolean closeById(Long id) {
-        return accounts.remove(id) != null;
+    public void saveAmount(Long id, BigDecimal amount) {
+        var account = findById(id);
+        account.ifPresent(value -> value.setMoneyAmount(amount));
+    }
+
+    public void closeById(Long id) {
+        var account = findById(id);
+        account.ifPresent(value -> value.setClosed(true));
     }
 }

@@ -11,6 +11,7 @@ import sorokin.dev.service.UserService;
 import java.util.Scanner;
 
 import static sorokin.dev.dto.CommandType.USER_CREATE;
+import static sorokin.dev.service.HelperUtils.isLoginValid;
 
 @Component
 public class UserCreateHandler implements CommandHandler {
@@ -27,7 +28,7 @@ public class UserCreateHandler implements CommandHandler {
 
     @Override
     public void handle(Scanner scanner) {
-        System.out.print("Enter user login (5-20 symbols):");
+        System.out.print("> Enter user login (3-20 symbols):");
         System.out.print("> ");
         String login = scanner.nextLine();
         if (!isLoginValid(login)) {
@@ -47,12 +48,5 @@ public class UserCreateHandler implements CommandHandler {
     @Override
     public CommandType getType() {
         return USER_CREATE;
-    }
-
-    private boolean isLoginValid(String value) {
-        return (value != null)
-                && !value.isBlank()
-                && value.length() > 4
-                && value.length() < 21;
     }
 }

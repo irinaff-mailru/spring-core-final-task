@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.util.Scanner;
 
 import static sorokin.dev.dto.CommandType.ACCOUNT_CREATE;
+import static sorokin.dev.service.HelperUtils.getLongValue;
+import static sorokin.dev.service.HelperUtils.isUserIdValid;
 
 @Component
 public class AccountCreateHandler implements CommandHandler {
@@ -22,6 +24,11 @@ public class AccountCreateHandler implements CommandHandler {
     public AccountCreateHandler(UserService userService, AccountService accountService, AccountConfig accountConfig) {
         this.userService = userService;
         this.accountService = accountService;
+    }
+
+    @Override
+    public CommandType getType() {
+        return ACCOUNT_CREATE;
     }
 
     @Override
@@ -36,33 +43,12 @@ public class AccountCreateHandler implements CommandHandler {
         Long userId = getLongValue(value);
         var optionalUser = userService.findUserById(userId);
         if (userId < 0 || optionalUser.isEmpty()) {
-            System.out.print("userId not exist, return to enter one of operation...");
+            System.out.println("userId not exist, return to enter one of operation...");
             return;
         }
         Account newAccount = accountService.create(userId, BigDecimal.ZERO);
         User user = optionalUser.get();
         user.addAccount(newAccount);
         System.out.println("New account created with ID:" + newAccount.getId() + " for user: " + user.getLogin());
-    }
-
-    @Override
-    public CommandType getType() {
-        return ACCOUNT_CREATE;
-    }
-
-    private boolean isUserIdValid(String value) {
-        return (value != null)
-                && !value.isBlank()
-                && value.length() < 19
-                && value.matches("\\d+");
-    }
-
-    private Long getLongValue(String value) {
-        try {
-            return Long.parseLong(value);
-        } catch (NumberFormatException e) {
-            System.out.print("userId not valid, return to enter one of operation...");
-            return -1L;
-        }
     }
 }

@@ -8,7 +8,6 @@ import sorokin.dev.service.command.CommandDispatcher;
 import java.util.Scanner;
 
 import static sorokin.dev.dto.CommandType.EXIT;
-import static sorokin.dev.dto.CommandType.NO_USE;
 
 @Component
 public class OperationConsoleListener {

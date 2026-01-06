@@ -1,7 +1,6 @@
 package sorokin.dev.service;
 
 import org.springframework.stereotype.Service;
-import sorokin.dev.dto.Account;
 import sorokin.dev.dto.User;
 import sorokin.dev.repository.UserRepository;
 

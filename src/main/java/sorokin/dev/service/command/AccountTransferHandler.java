@@ -8,32 +8,42 @@ import sorokin.dev.service.AccountService;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-import static sorokin.dev.dto.CommandType.ACCOUNT_DEPOSIT;
+import static sorokin.dev.dto.CommandType.ACCOUNT_TRANSFER;
 import static sorokin.dev.service.HelperUtils.getAmount;
 import static sorokin.dev.service.HelperUtils.getLongValue;
 import static sorokin.dev.service.HelperUtils.isAccountIdValid;
 
 @Component
-public class AccountDepositHandler implements CommandHandler {
+public class AccountTransferHandler implements CommandHandler {
 
     private final AccountService accountService;
 
-    public AccountDepositHandler(AccountService accountService) {
+    public AccountTransferHandler(AccountService accountService) {
         this.accountService = accountService;
     }
+
     @Override
     public CommandType getType() {
-        return ACCOUNT_DEPOSIT;
+        return ACCOUNT_TRANSFER;
     }
 
     @Override
     public void handle(Scanner scanner) {
-        System.out.print("Enter account ID:");
+        System.out.print("Enter source account ID:");
         System.out.print("> ");
-        String accountIdValue = scanner.nextLine();
-        var account = getAccount(accountIdValue);
-        if (account == null) {
-            System.out.println("account ID not exist, return to enter one of operation...");
+        String sourceAccountIdValue = scanner.nextLine();
+        var sourceAccount = getAccount(sourceAccountIdValue);
+        if (sourceAccount == null) {
+            System.out.println("source account ID not exist, return to enter one of operation...");
+            return;
+        }
+
+        System.out.print("Enter target account ID:");
+        System.out.print("> ");
+        String targetAccountIdValue = scanner.nextLine();
+        var targetAccount = getAccount(targetAccountIdValue);
+        if (targetAccount == null) {
+            System.out.println("target account ID not exist, return to enter one of operation...");
             return;
         }
 
@@ -45,21 +55,23 @@ public class AccountDepositHandler implements CommandHandler {
             System.out.println("amount value not valid, return to enter one of operation...");
             return;
         }
-        if (accountService.depositAmount(account.getId(), amount)) {
-            System.out.println("Amount " + amount +" deposited to account ID:" + account.getId());
+        if (accountService.transferAmount(sourceAccount.getId(), targetAccount.getId(), amount)) {
+            System.out.println("Amount " + amount +" transferred from account ID " + sourceAccount.getId() +
+                    " to account ID " + targetAccount.getId());
         } else {
             System.out.println("The operation failed, please try again later.");
         }
+
     }
 
     private Account getAccount(String value) {
         if (!isAccountIdValid(value)) {
-            System.out.print("account ID not valid, return to enter one of operation...");
+            System.out.println("account ID not valid, return to enter one of operation...");
             return null;
         }
         Long accountId = getLongValue(value);
         if (accountId < 0 ) {
-            System.out.print("account ID not valid, return to enter one of operation...");
+            System.out.println("account ID not valid, return to enter one of operation...");
             return null;
         }
         return accountService.getActiveAccount(accountId);
