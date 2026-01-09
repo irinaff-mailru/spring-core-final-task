@@ -8,6 +8,7 @@ import sorokin.dev.repository.AccountRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -33,60 +34,55 @@ public class AccountService {
     }
 
     /**
-     * Поиск счета по ID.
-     */
-    public Optional<Account> findAccountById(Long id) {
-        return accountRepository.findById(id);
-    }
-
-    /**
      * Поиск активного счета по ID.
      */
-    public Account getActiveAccount(Long id) {
+    public Optional<Account> getActiveAccount(Long id) {
         return accountRepository.findById(id)
-                .filter(a -> !a.isClosed())
-                .orElse(null);
+                .filter(a -> !a.isClosed());
     }
 
-    public List<Account> getAllUserAccounts(Long userId) {
-        return accountRepository.findAllByUserId(userId);
+    public List<Account> getAllActiveUserAccounts(Long userId) {
+        return accountRepository.findAllActiveByUserId(userId);
     }
 
     /**
      * Пополнение средств.
      */
-    public boolean depositAmount(Long id, BigDecimal amount) {
-        return updateBalance(id, amount, false);
+    public void depositAmount(Long id, BigDecimal amount) {
+        updateBalance(id, amount, false);
     }
 
     /**
      * Cнятие средств.
      */
-    public boolean withdraw(Long id, BigDecimal amount) {
-        Account account = getActiveAccount(id);
+    public void withdraw(Long id, BigDecimal amount) {
+        Account account = getActiveAccount(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such account ID %s".formatted(id)));
         synchronized (account) {
-            return updateBalance(id, amount.negate(), true);
+            updateBalance(id, amount.negate(), true);
         }
     }
 
     /**
      * Перевод средств между счетами.
      */
-    public boolean transferAmount(Long sourceId, Long targetId, BigDecimal amount) {
-        Account source = getActiveAccount(sourceId);
-        Account target = getActiveAccount(targetId);
-        if (source == null || target == null) {
-            System.out.println("operation not avalable.");
-            return false;
-        }
+    public void transferAmount(Long sourceId, Long targetId, BigDecimal amount) {
+        Account source = getActiveAccount(sourceId)
+                .orElseThrow(() -> new IllegalArgumentException("No such account ID %s".formatted(sourceId)));
+        ;
+        Account target = getActiveAccount(targetId)
+                .orElseThrow(() -> new IllegalArgumentException("No such account ID %s".formatted(targetId)));
+        ;
 
         Account first = (source.getId() < target.getId()) ? source : target;
         Account second = (source.getId() < target.getId()) ? target : source;
         synchronized (first) {
             synchronized (second) {
                 if (source.getMoneyAmount().compareTo(amount) < 0) {
-                    System.out.println("operation not avalable.");
-                    return false;
+                    throw new IllegalArgumentException(
+                            "Cannot withdraw from account: id=%s, moneyAmount=%s, attemptedWithdraw=%s"
+                                    .formatted(sourceId, source.getMoneyAmount(), amount)
+                    );
                 }
                 BigDecimal amountToDeposit = source.getUserId() == target.getUserId() ? amount :
                         amount.subtract(amount.multiply(accountProperties.getTransferCommission()).setScale(2, RoundingMode.HALF_UP));
@@ -95,43 +91,50 @@ public class AccountService {
                 depositAmount(targetId, amountToDeposit);
             }
         }
-        return true;
     }
 
     /**
      * Закрытие счета.
      */
-    public boolean close(Long id) {
-        Account account = getActiveAccount(id);
-        if (account == null) {
-            System.out.println("No such account.");
-            return false;
+    public Account close(Long id) {
+        Account accountToClose = getActiveAccount(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such account ID %s".formatted(id)));
+
+        List<Account> userAccounts = getAllActiveUserAccounts(accountToClose.getUserId());
+        if (userAccounts.size() == 1) {
+            throw new IllegalArgumentException("Cannot close the only one account ID %s"
+                    .formatted(id));
         }
-        List<Account> userAccounts = getAllUserAccounts(account.getUserId());
-        if (userAccounts.size() < 2) {
-            System.out.println("Cannot close the only one account.");
-            return false;
-        }
-        synchronized (account) {
-            accountRepository.closeById(id);
-            return true;
+        Account accountToDeposit = userAccounts.stream()
+                .filter(a -> !Objects.equals(a.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Not found account for deposit amount"));
+
+        Account first = (accountToClose.getId() < accountToDeposit.getId()) ? accountToClose : accountToDeposit;
+        Account second = (accountToClose.getId() < accountToDeposit.getId()) ? accountToDeposit : accountToClose;
+
+        synchronized (first) {
+            synchronized (second) {
+                accountRepository.closeById(id);
+                depositAmount(accountToDeposit.getId(), accountToClose.getMoneyAmount());
+                return accountToClose;
+            }
         }
     }
 
-    private boolean withdrawWithoutBloking(Long id, BigDecimal amount) {
-        return updateBalance(id, amount.negate(), true);
+    private void withdrawWithoutBloking(Long id, BigDecimal amount) {
+        updateBalance(id, amount.negate(), true);
     }
 
-    private boolean updateBalance(Long id, BigDecimal delta, boolean isWithdrawal) {
-        Account account = getActiveAccount(id);
+    private void updateBalance(Long id, BigDecimal delta, boolean isWithdrawal) {
+        Optional<Account> account = getActiveAccount(id);
 
-        if (account == null || (isWithdrawal && account.getMoneyAmount().compareTo(delta.abs()) < 0)) {
-            System.out.println("operation not avalable.");
-            return false;
+        if (account.isEmpty() || (isWithdrawal && account.get().getMoneyAmount().compareTo(delta.abs()) < 0)) {
+            throw new IllegalArgumentException("Cannot update balance account ID %s"
+                    .formatted(id));
         }
 
-        BigDecimal newAmount = account.getMoneyAmount().add(delta).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal newAmount = account.get().getMoneyAmount().add(delta).setScale(2, RoundingMode.HALF_UP);
         accountRepository.saveAmount(id, newAmount);
-        return true;
     }
 }

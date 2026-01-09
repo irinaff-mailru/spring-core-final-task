@@ -47,6 +47,6 @@ public class AccountCreateHandler implements CommandHandler {
         Account newAccount = accountService.create(userId, false);
         User user = optionalUser.get();
         user.addAccount(newAccount);
-        System.out.println("New account created with ID:" + newAccount.getId() + " for user: " + user.getLogin());
+        System.out.println("New account created with ID: %s  for user: %s".formatted(newAccount.getId(), user.getLogin()));
     }
 }

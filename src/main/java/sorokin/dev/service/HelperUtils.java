@@ -64,4 +64,17 @@ public final class HelperUtils {
         BigDecimal amount = new BigDecimal(sanitizedValue);
         return amount.setScale(2, RoundingMode.HALF_UP);
     }
+
+    public static Long verifyAndGetAccountId(String value) {
+        if (!isAccountIdValid(value)) {
+            System.out.print("account ID not valid, return to enter one of operation...");
+            return null;
+        }
+        Long accountId = getLongValue(value);
+        if (accountId < 0 ) {
+            System.out.print("account ID not valid, return to enter one of operation...");
+            return null;
+        }
+        return accountId;
+    }
 }

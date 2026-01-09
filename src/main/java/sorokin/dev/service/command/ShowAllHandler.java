@@ -1,9 +1,7 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.config.AccountProperties;
 import sorokin.dev.dto.User;
-import sorokin.dev.service.AccountService;
 import sorokin.dev.service.UserService;
 
 import java.util.List;
@@ -15,11 +13,9 @@ import static sorokin.dev.service.command.CommandType.SHOW_ALL_USERS;
 public class ShowAllHandler implements CommandHandler {
 
     private final UserService userService;
-    private final AccountService accountService;
 
-    public ShowAllHandler(UserService userService, AccountService accountService, AccountProperties accountProperties) {
+    public ShowAllHandler(UserService userService) {
         this.userService = userService;
-        this.accountService = accountService;
     }
 
     @Override
@@ -32,6 +28,5 @@ public class ShowAllHandler implements CommandHandler {
         System.out.println("List of all users:");
         List<User> users = userService.getUsers();
         users.forEach(System.out::println);
-
     }
 }

@@ -1,16 +1,14 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.dto.Account;
 import sorokin.dev.service.AccountService;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
 
+import static sorokin.dev.service.HelperUtils.verifyAndGetAccountId;
 import static sorokin.dev.service.command.CommandType.ACCOUNT_TRANSFER;
 import static sorokin.dev.service.HelperUtils.getAmount;
-import static sorokin.dev.service.HelperUtils.getLongValue;
-import static sorokin.dev.service.HelperUtils.isAccountIdValid;
 
 @Component
 public class AccountTransferHandler implements CommandHandler {
@@ -31,25 +29,17 @@ public class AccountTransferHandler implements CommandHandler {
         System.out.print("Enter source account ID:");
         System.out.print("> ");
         String sourceAccountIdValue = scanner.nextLine();
-        var sourceAccount = getAccount(sourceAccountIdValue);
-        if (sourceAccount == null) {
-            System.out.println("source account ID not exist, return to enter one of operation...");
-            return;
-        }
+        Long sourceAccountId = verifyAndGetAccountId(sourceAccountIdValue);
 
         System.out.print("Enter target account ID:");
         System.out.print("> ");
         String targetAccountIdValue = scanner.nextLine();
         if (targetAccountIdValue.equals(sourceAccountIdValue)) {
-            System.out.println("target account ID should not match source account ID\n" +
+        System.out.println("target account ID should not match source account ID\n" +
                     "return to enter one of operation...");
-            return;
+        return;
         }
-        var targetAccount = getAccount(targetAccountIdValue);
-        if (targetAccount == null) {
-            System.out.println("target account ID not exist, return to enter one of operation...");
-            return;
-        }
+        Long targetAccountId = verifyAndGetAccountId(targetAccountIdValue);
 
         System.out.print("Enter amount:");
         System.out.print("> ");
@@ -59,25 +49,7 @@ public class AccountTransferHandler implements CommandHandler {
             System.out.println("amount value not valid, return to enter one of operation...");
             return;
         }
-        if (accountService.transferAmount(sourceAccount.getId(), targetAccount.getId(), amount)) {
-            System.out.println("Amount " + amount +" transferred from account ID " + sourceAccount.getId() +
-                    " to account ID " + targetAccount.getId());
-        } else {
-            System.out.println("The operation failed, please try again later.");
-        }
-
-    }
-
-    private Account getAccount(String value) {
-        if (!isAccountIdValid(value)) {
-            System.out.println("account ID not valid, return to enter one of operation...");
-            return null;
-        }
-        Long accountId = getLongValue(value);
-        if (accountId < 0 ) {
-            System.out.println("account ID not valid, return to enter one of operation...");
-            return null;
-        }
-        return accountService.getActiveAccount(accountId);
+        accountService.transferAmount(sourceAccountId, targetAccountId, amount);
+        System.out.printf("Amount %s transferred from account ID %s to account ID %s%n", amount, sourceAccountId, targetAccountId);
     }
 }

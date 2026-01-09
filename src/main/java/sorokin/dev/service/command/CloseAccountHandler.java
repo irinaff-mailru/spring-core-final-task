@@ -1,25 +1,20 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.dto.Account;
 import sorokin.dev.service.AccountService;
-import sorokin.dev.service.UserService;
 
 import java.util.Scanner;
 
+import static sorokin.dev.service.HelperUtils.verifyAndGetAccountId;
 import static sorokin.dev.service.command.CommandType.ACCOUNT_CLOSE;
-import static sorokin.dev.service.HelperUtils.getLongValue;
-import static sorokin.dev.service.HelperUtils.isAccountIdValid;
 
 @Component
 public class CloseAccountHandler implements CommandHandler {
 
     private final AccountService accountService;
-    private final UserService userService;
 
-    public CloseAccountHandler(AccountService accountService, UserService userService) {
+    public CloseAccountHandler(AccountService accountService) {
         this.accountService = accountService;
-        this.userService = userService;
     }
 
     @Override
@@ -32,28 +27,8 @@ public class CloseAccountHandler implements CommandHandler {
         System.out.print("Enter the account id for closing:");
         System.out.print("> ");
         String accountIdValue = scanner.nextLine();
-        var account = getAccount(accountIdValue);
-        if (account == null) {
-            System.out.println("account ID not exist or already closed, return to enter one of operation...");
-            return;
-        }
-        if (accountService.close(account.getId())) {
-            System.out.println("Account " + account.getId() +" closed");
-        } else {
-            System.out.println("The operation failed, please try again later.");
-        }
-    }
-
-    private Account getAccount(String value) {
-        if (!isAccountIdValid(value)) {
-            System.out.println("account ID not valid, return to enter one of operation...");
-            return null;
-        }
-        Long accountId = getLongValue(value);
-        if (accountId < 0 ) {
-            System.out.println("account ID not valid, return to enter one of operation...");
-            return null;
-        }
-        return accountService.getActiveAccount(accountId);
+        Long accountId = verifyAndGetAccountId(accountIdValue);
+        accountService.close(accountId);
+        System.out.printf("Account %s closed%n", accountId);
     }
 }

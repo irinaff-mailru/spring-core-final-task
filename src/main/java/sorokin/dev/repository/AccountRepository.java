@@ -37,8 +37,9 @@ public class AccountRepository {
         account.ifPresent(value -> value.setClosed(true));
     }
 
-    public List<Account> findAllByUserId(Long userId) {
+    public List<Account> findAllActiveByUserId(Long userId) {
         return accounts.values().stream()
+                .filter(a -> !a.isClosed())
                 .filter(a -> a.getUserId().equals(userId))
                 .toList();
     }

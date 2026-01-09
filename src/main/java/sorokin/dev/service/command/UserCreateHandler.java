@@ -38,7 +38,7 @@ public class UserCreateHandler implements CommandHandler {
         User newUser = userService.create(login);
         Account newAccount = accountService.create(newUser.getId(), true);
         newUser.addAccount(newAccount);
-        System.out.println("User created:" + newUser);
+        System.out.printf("User created: %s%n", newUser);
     }
 
     @Override
