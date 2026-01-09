@@ -2,13 +2,12 @@ package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
 import sorokin.dev.dto.Account;
-import sorokin.dev.dto.CommandType;
 import sorokin.dev.service.AccountService;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-import static sorokin.dev.dto.CommandType.ACCOUNT_TRANSFER;
+import static sorokin.dev.service.command.CommandType.ACCOUNT_TRANSFER;
 import static sorokin.dev.service.HelperUtils.getAmount;
 import static sorokin.dev.service.HelperUtils.getLongValue;
 import static sorokin.dev.service.HelperUtils.isAccountIdValid;
@@ -41,6 +40,11 @@ public class AccountTransferHandler implements CommandHandler {
         System.out.print("Enter target account ID:");
         System.out.print("> ");
         String targetAccountIdValue = scanner.nextLine();
+        if (targetAccountIdValue.equals(sourceAccountIdValue)) {
+            System.out.println("target account ID should not match source account ID\n" +
+                    "return to enter one of operation...");
+            return;
+        }
         var targetAccount = getAccount(targetAccountIdValue);
         if (targetAccount == null) {
             System.out.println("target account ID not exist, return to enter one of operation...");

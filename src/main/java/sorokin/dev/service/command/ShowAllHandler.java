@@ -1,8 +1,7 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.config.AccountConfig;
-import sorokin.dev.dto.CommandType;
+import sorokin.dev.config.AccountProperties;
 import sorokin.dev.dto.User;
 import sorokin.dev.service.AccountService;
 import sorokin.dev.service.UserService;
@@ -10,7 +9,7 @@ import sorokin.dev.service.UserService;
 import java.util.List;
 import java.util.Scanner;
 
-import static sorokin.dev.dto.CommandType.SHOW_ALL_USERS;
+import static sorokin.dev.service.command.CommandType.SHOW_ALL_USERS;
 
 @Component
 public class ShowAllHandler implements CommandHandler {
@@ -18,7 +17,7 @@ public class ShowAllHandler implements CommandHandler {
     private final UserService userService;
     private final AccountService accountService;
 
-    public ShowAllHandler(UserService userService, AccountService accountService, AccountConfig accountConfig) {
+    public ShowAllHandler(UserService userService, AccountService accountService, AccountProperties accountProperties) {
         this.userService = userService;
         this.accountService = accountService;
     }

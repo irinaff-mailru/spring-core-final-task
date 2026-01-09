@@ -18,7 +18,7 @@ public class UserRepository {
 
     public User save(String login) {
         Long id = idGenerator.getAndIncrement();
-        User newUser = new User(id, login);
+        User newUser = new User(id, login, new ArrayList<>());
         users.put(id, newUser);
         return newUser;
     }
@@ -35,5 +35,11 @@ public class UserRepository {
         return users.values().stream()
                 .filter(u -> login.equals(u.getLogin()))
                 .findFirst();
+    }
+
+    public boolean isLoginExist(String login) {
+        return users.values().stream()
+                .map(User::getLogin)
+                .anyMatch(l -> l.equals(login));
     }
 }

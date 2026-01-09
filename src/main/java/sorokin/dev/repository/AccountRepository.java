@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import sorokin.dev.dto.Account;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,5 +35,11 @@ public class AccountRepository {
     public void closeById(Long id) {
         var account = findById(id);
         account.ifPresent(value -> value.setClosed(true));
+    }
+
+    public List<Account> findAllByUserId(Long userId) {
+        return accounts.values().stream()
+                .filter(a -> a.getUserId().equals(userId))
+                .toList();
     }
 }

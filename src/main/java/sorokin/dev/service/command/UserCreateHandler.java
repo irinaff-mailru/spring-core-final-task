@@ -1,16 +1,14 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.config.AccountConfig;
 import sorokin.dev.dto.Account;
-import sorokin.dev.dto.CommandType;
 import sorokin.dev.dto.User;
 import sorokin.dev.service.AccountService;
 import sorokin.dev.service.UserService;
 
 import java.util.Scanner;
 
-import static sorokin.dev.dto.CommandType.USER_CREATE;
+import static sorokin.dev.service.command.CommandType.USER_CREATE;
 import static sorokin.dev.service.HelperUtils.isLoginValid;
 
 @Component
@@ -18,12 +16,10 @@ public class UserCreateHandler implements CommandHandler {
 
     private final UserService userService;
     private final AccountService accountService;
-    private final AccountConfig accountConfig;
 
-    public UserCreateHandler(UserService userService, AccountService accountService, AccountConfig accountConfig) {
+    public UserCreateHandler(UserService userService, AccountService accountService) {
         this.userService = userService;
         this.accountService = accountService;
-        this.accountConfig = accountConfig;
     }
 
     @Override
@@ -40,7 +36,7 @@ public class UserCreateHandler implements CommandHandler {
             return;
         }
         User newUser = userService.create(login);
-        Account newAccount = accountService.create(newUser.getId(), accountConfig.getDefaultAmount());
+        Account newAccount = accountService.create(newUser.getId(), true);
         newUser.addAccount(newAccount);
         System.out.println("User created:" + newUser);
     }

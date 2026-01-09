@@ -1,4 +1,4 @@
-package sorokin.dev.dto;
+package sorokin.dev.service.command;
 
 public enum CommandType {
 
@@ -40,12 +40,7 @@ public enum CommandType {
     /**
      * Выход.
      */
-    EXIT,
-
-    /**
-     * Не известная команда.
-     */
-    NO_USE;
+    EXIT;
 
     public static CommandType getValue(String value) {
         if (value != null) {
@@ -55,7 +50,7 @@ public enum CommandType {
                 }
             }
         }
-        return NO_USE;
+        throw new IllegalArgumentException("No such command found!");
     }
 
 }

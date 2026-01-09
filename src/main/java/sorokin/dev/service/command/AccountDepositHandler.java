@@ -2,13 +2,12 @@ package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
 import sorokin.dev.dto.Account;
-import sorokin.dev.dto.CommandType;
 import sorokin.dev.service.AccountService;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-import static sorokin.dev.dto.CommandType.ACCOUNT_DEPOSIT;
+import static sorokin.dev.service.command.CommandType.ACCOUNT_DEPOSIT;
 import static sorokin.dev.service.HelperUtils.getAmount;
 import static sorokin.dev.service.HelperUtils.getLongValue;
 import static sorokin.dev.service.HelperUtils.isAccountIdValid;

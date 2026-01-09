@@ -1,6 +1,5 @@
 package sorokin.dev.service.command;
 
-import sorokin.dev.dto.CommandType;
 import java.util.Scanner;
 
 /**

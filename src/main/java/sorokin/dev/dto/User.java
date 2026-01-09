@@ -11,7 +11,7 @@ public class User {
     /**
      * Идентификатор.
      */
-    private Long id;
+    private final Long id;
 
     /**
      * Логин.
@@ -23,9 +23,10 @@ public class User {
      */
     private List<Account> accounts = new ArrayList<>();
 
-    public User(Long id, String login) {
+    public User(Long id, String login, List<Account> accounts) {
         this.id = id;
         this.login = login;
+        this.accounts = accounts;
     }
 
     @Override
@@ -45,16 +46,8 @@ public class User {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getLogin() {
         return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public List<Account> getAccounts() {

@@ -1,17 +1,15 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.config.AccountConfig;
+import sorokin.dev.config.AccountProperties;
 import sorokin.dev.dto.Account;
-import sorokin.dev.dto.CommandType;
 import sorokin.dev.dto.User;
 import sorokin.dev.service.AccountService;
 import sorokin.dev.service.UserService;
 
-import java.math.BigDecimal;
 import java.util.Scanner;
 
-import static sorokin.dev.dto.CommandType.ACCOUNT_CREATE;
+import static sorokin.dev.service.command.CommandType.ACCOUNT_CREATE;
 import static sorokin.dev.service.HelperUtils.getLongValue;
 import static sorokin.dev.service.HelperUtils.isUserIdValid;
 
@@ -21,7 +19,7 @@ public class AccountCreateHandler implements CommandHandler {
     private final UserService userService;
     private final AccountService accountService;
 
-    public AccountCreateHandler(UserService userService, AccountService accountService, AccountConfig accountConfig) {
+    public AccountCreateHandler(UserService userService, AccountService accountService, AccountProperties accountProperties) {
         this.userService = userService;
         this.accountService = accountService;
     }
@@ -33,8 +31,8 @@ public class AccountCreateHandler implements CommandHandler {
 
     @Override
     public void handle(Scanner scanner) {
-        System.out.print("Enter the user id for which to create an account:");
-        System.out.print("> ");
+        System.out.println("Enter the user id for which to create an account:");
+        System.out.println("> ");
         String value = scanner.nextLine();
         if (!isUserIdValid(value)) {
             System.out.print("userId not valid, return to enter one of operation...");
@@ -46,7 +44,7 @@ public class AccountCreateHandler implements CommandHandler {
             System.out.println("userId not exist, return to enter one of operation...");
             return;
         }
-        Account newAccount = accountService.create(userId, BigDecimal.ZERO);
+        Account newAccount = accountService.create(userId, false);
         User user = optionalUser.get();
         user.addAccount(newAccount);
         System.out.println("New account created with ID:" + newAccount.getId() + " for user: " + user.getLogin());

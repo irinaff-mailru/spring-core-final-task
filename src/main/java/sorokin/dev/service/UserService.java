@@ -23,8 +23,10 @@ public class UserService {
      * Создание пользователя.
      */
     public User create(String login) {
-        User newUser = userRepository.save(login);
-        return newUser;
+        if (userRepository.isLoginExist(login)) {
+            throw new IllegalArgumentException("User with login %s already exists".formatted(login));
+        }
+        return userRepository.save(login);
     }
 
     /**
@@ -45,6 +47,12 @@ public class UserService {
      * Получения списка всех пользователей.
      */
     public List<User> getUsers() {
-        return userRepository.findAll();
+        return userRepository.findAll().stream().map(user -> {
+
+            var openAccounts = user.getAccounts().stream()
+                    .filter(account -> !account.isClosed())
+                    .toList();
+            return new User(user.getId(), user.getLogin(), openAccounts);
+            }).toList();
     }
 }

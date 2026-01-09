@@ -10,12 +10,12 @@ public class Account {
     /**
      * Идентификатор.
      */
-    private Long id;
+    private final Long id;
 
     /**
      * Идентификатор пользователя владельца счета.
      */
-    private Long userId;
+    private final Long userId;
 
     /**
      * Текущий баланс счета в рублях.
@@ -35,29 +35,19 @@ public class Account {
 
     @Override
     public String toString() {
-        if (!this.isClosed) {
-            return "Account{" +
-                    "id=" + id +
-                    ", userId=" + userId +
-                    ", moneyAmount=" + moneyAmount +
-                    '}';
-        } else return "";
+        return "Account{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", moneyAmount=" + moneyAmount +
+                '}';
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getUserId() {
         return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public BigDecimal getMoneyAmount() {
