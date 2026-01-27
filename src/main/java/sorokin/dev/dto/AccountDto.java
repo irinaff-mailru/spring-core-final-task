@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 /**
  * Счет.
  */
-public class Account {
+//TODO в следующем задании использовать для передаци на UI
+public class AccountDto {
 
     /**
      * Идентификатор.
@@ -27,7 +28,7 @@ public class Account {
      */
     private boolean isClosed = false;
 
-    public Account(Long id, Long userId, BigDecimal moneyAmount) {
+    public AccountDto(Long id, Long userId, BigDecimal moneyAmount) {
         this.id = id;
         this.userId = userId;
         this.moneyAmount = moneyAmount;

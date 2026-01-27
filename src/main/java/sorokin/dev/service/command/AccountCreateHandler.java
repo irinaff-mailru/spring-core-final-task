@@ -2,8 +2,8 @@ package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
 import sorokin.dev.config.AccountProperties;
-import sorokin.dev.dto.Account;
-import sorokin.dev.dto.User;
+import sorokin.dev.domain.entity.Account;
+import sorokin.dev.domain.entity.User;
 import sorokin.dev.service.AccountService;
 import sorokin.dev.service.UserService;
 
@@ -39,14 +39,12 @@ public class AccountCreateHandler implements CommandHandler {
             return;
         }
         Long userId = getLongValue(value);
-        var optionalUser = userService.findUserById(userId);
-        if (userId < 0 || optionalUser.isEmpty()) {
-            System.out.println("userId not exist, return to enter one of operation...");
+        if (userId < 0) {
+            System.out.println("userId not valid, return to enter one of operation...");
             return;
         }
-        Account newAccount = accountService.create(userId, false);
-        User user = optionalUser.get();
-        user.addAccount(newAccount);
-        System.out.println("New account created with ID: %s  for user: %s".formatted(newAccount.getId(), user.getLogin()));
+        User user = userService.findUserById(userId);
+        Account newAccount = accountService.create(userId);
+        System.out.printf("New account created with ID: %s  for user: %s%n", newAccount.getId(), user.getLogin());
     }
 }

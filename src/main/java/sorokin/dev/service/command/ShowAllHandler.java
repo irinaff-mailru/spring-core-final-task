@@ -1,7 +1,7 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.dto.User;
+import sorokin.dev.domain.entity.User;
 import sorokin.dev.service.UserService;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class ShowAllHandler implements CommandHandler {
     @Override
     public void handle(Scanner scanner) {
         System.out.println("List of all users:");
-        List<User> users = userService.getUsers();
-        users.forEach(System.out::println);
+        List<User> Users = userService.getUsers();
+        Users.forEach(System.out::println);
     }
 }

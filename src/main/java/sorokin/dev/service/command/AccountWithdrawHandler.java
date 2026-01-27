@@ -41,5 +41,5 @@ public class AccountWithdrawHandler implements CommandHandler {
         }
         accountService.withdraw(accountId, amount);
         System.out.printf("Amount %s withdrawn from account ID %s%n", amount, accountId);
-     }
+    }
 }

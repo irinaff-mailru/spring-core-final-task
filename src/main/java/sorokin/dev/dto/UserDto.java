@@ -6,7 +6,8 @@ import java.util.List;
 /**
  * Пользователь.
  */
-public class User {
+//TODO в следующем задании использовать для передаци на UI
+public class UserDto {
 
     /**
      * Идентификатор.
@@ -21,12 +22,12 @@ public class User {
     /**
      * Список счетов.
      */
-    private List<Account> accounts = new ArrayList<>();
+    private List<AccountDto> accountDtos = new ArrayList<>();
 
-    public User(Long id, String login, List<Account> accounts) {
+    public UserDto(Long id, String login, List<AccountDto> accountDtos) {
         this.id = id;
         this.login = login;
-        this.accounts = accounts;
+        this.accountDtos = accountDtos;
     }
 
     @Override
@@ -34,12 +35,12 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
-                ", accounts=" + accounts +
+                ", accounts=" + accountDtos +
                 '}';
     }
 
-    public void addAccount(Account account) {
-        accounts.add(account);
+    public void addAccount(AccountDto accountDto) {
+        accountDtos.add(accountDto);
     }
 
     public Long getId() {
@@ -50,11 +51,11 @@ public class User {
         return login;
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
+    public List<AccountDto> getAccounts() {
+        return accountDtos;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
+    public void setAccounts(List<AccountDto> accountDtos) {
+        this.accountDtos = accountDtos;
     }
 }

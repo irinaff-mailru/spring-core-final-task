@@ -35,9 +35,9 @@ public class AccountTransferHandler implements CommandHandler {
         System.out.print("> ");
         String targetAccountIdValue = scanner.nextLine();
         if (targetAccountIdValue.equals(sourceAccountIdValue)) {
-        System.out.println("target account ID should not match source account ID\n" +
+            System.out.println("target account ID should not match source account ID\n" +
                     "return to enter one of operation...");
-        return;
+            return;
         }
         Long targetAccountId = verifyAndGetAccountId(targetAccountIdValue);
 
