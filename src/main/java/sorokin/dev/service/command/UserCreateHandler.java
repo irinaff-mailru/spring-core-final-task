@@ -1,8 +1,7 @@
 package sorokin.dev.service.command;
 
 import org.springframework.stereotype.Component;
-import sorokin.dev.dto.Account;
-import sorokin.dev.dto.User;
+import sorokin.dev.domain.entity.User;
 import sorokin.dev.service.AccountService;
 import sorokin.dev.service.UserService;
 
@@ -24,20 +23,18 @@ public class UserCreateHandler implements CommandHandler {
 
     @Override
     public void handle(Scanner scanner) {
-        System.out.print("> Enter user login (3-20 symbols):");
+        System.out.print("> Enter user login (3-50 symbols):");
         System.out.print("> ");
         String login = scanner.nextLine();
         if (!isLoginValid(login)) {
             System.out.print("login not valid, return to enter one of operation...");
             return;
         }
-        if (userService.findUserByLogin(login).isPresent()) {
+        if (userService.findUserByLogin(login) != null) {
             System.out.print("login already exist, return to enter one of operation...");
             return;
         }
         User newUser = userService.create(login);
-        Account newAccount = accountService.create(newUser.getId(), true);
-        newUser.addAccount(newAccount);
         System.out.printf("User created: %s%n", newUser);
     }
 

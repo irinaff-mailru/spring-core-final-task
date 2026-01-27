@@ -18,6 +18,7 @@ public class AccountDepositHandler implements CommandHandler {
     public AccountDepositHandler(AccountService accountService) {
         this.accountService = accountService;
     }
+
     @Override
     public CommandType getType() {
         return ACCOUNT_DEPOSIT;

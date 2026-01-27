@@ -24,13 +24,13 @@ public class OperationConsoleListener {
 
     public void listenUpdates() {
         while (!Thread.currentThread().isInterrupted()) {
-            try{
-            System.out.println("\nPlease type next operation:");
-            commandDispatcher.printCommands();
-            System.out.print("> ");
-            CommandType commandType = CommandType.getValue(scanner.nextLine());
-            processCommand(commandType);
-        } catch (IllegalArgumentException e) {
+            try {
+                System.out.println("\nPlease type next operation:");
+                commandDispatcher.printCommands();
+                System.out.print("> ");
+                CommandType commandType = CommandType.getValue(scanner.nextLine());
+                processCommand(commandType);
+            } catch (IllegalArgumentException e) {
                 System.out.println("No such command found");
             }
         }

@@ -23,7 +23,7 @@ public final class HelperUtils {
         return (value != null)
                 && !value.isBlank()
                 && value.length() > 2
-                && value.length() < 21;
+                && value.length() < 51;
     }
 
     public static Long getLongValue(String value) {
@@ -46,7 +46,7 @@ public final class HelperUtils {
             return null;
         }
         BigDecimal amount = parseAmount(value);
-        if (amount.compareTo(new BigDecimal("0.01")) < 0 ) {
+        if (amount.compareTo(new BigDecimal("0.01")) < 0) {
             return null;
         }
         return amount;
@@ -71,7 +71,7 @@ public final class HelperUtils {
             return null;
         }
         Long accountId = getLongValue(value);
-        if (accountId < 0 ) {
+        if (accountId < 0) {
             System.out.print("account ID not valid, return to enter one of operation...");
             return null;
         }
